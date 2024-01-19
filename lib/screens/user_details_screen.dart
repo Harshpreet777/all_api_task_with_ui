@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:task/models/response_model.dart';
 import 'package:task/screens/update_screen.dart';
+import 'package:task/screens/welcome_screen.dart';
 import 'package:task/services/dio_delete_service.dart';
 import 'package:task/services/dio_get_service.dart';
 import 'package:task/util/color_constant.dart';
@@ -23,7 +24,11 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        leading:  IconButton(onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const WelcomeScreen(),));
+        }, icon: const Icon(Icons.arrow_back)),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -128,7 +133,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                                     userId: data.id,
                                                     userEmail: data.email,
                                                     userGender:
-                                                        data.gender.toString(),
+                                                        data.gender,
                                                     userStatus: "active",
                                                   )));
                                       setState(() {

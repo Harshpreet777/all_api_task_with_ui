@@ -10,7 +10,7 @@ class ResponseModel {
     int id;
     String name;
     String email;
-    Gender gender;
+    String gender;
     Status status;
 
     ResponseModel({
@@ -25,7 +25,7 @@ class ResponseModel {
         id: json["id"],
         name: json["name"],
         email: json["email"],
-        gender: genderValues.map[json["gender"]]!,
+        gender: json["gender"],
         status: statusValues.map[json["status"]]!,
     );
 

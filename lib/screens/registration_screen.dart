@@ -44,7 +44,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 22),
                 child: TextFormField(
-                  controller:nameController ,
+                  controller: nameController,
                   validator: (value) {
                     String namePattern = r'^[a-z A-Z,.\-]+$';
                     RegExp regExp = RegExp(namePattern);
@@ -57,7 +57,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   },
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
-                    
                       hintStyle: TextStyle(color: ColorConstant.grey),
                       filled: true,
                       hintText: 'Name',
@@ -86,7 +85,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     if (value.toString().isEmpty) {
                       return "Cannot be Empty";
                     } else if (!regExp.hasMatch(value!)) {
-                      return "@ and . is required";
+                      return "Email is Not Valid";
                     }
                     return null;
                   },
@@ -203,8 +202,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             const snackBar =
                                 SnackBar(content: Text('User Not Registered!'));
                           }
-
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          if (isSuccess && context.mounted) {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          }
                         }
                       },
                       child: const Text(

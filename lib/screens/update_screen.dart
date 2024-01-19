@@ -2,12 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:task/models/request_model.dart';
-import 'package:task/models/response_model.dart';
 import 'package:task/screens/user_details_screen.dart';
-import 'package:task/services/dio_get_service.dart';
 import 'package:task/services/dio_update_service.dart';
 import 'package:task/util/color_constant.dart';
-import 'package:task/util/strings.dart';
 
 class UpdateScreen extends StatefulWidget {
   const UpdateScreen(
@@ -132,8 +129,8 @@ class _UpdateScreenState extends State<UpdateScreen> {
                             "Male",
                             style: TextStyle(color: ColorConstant.grey),
                           ),
-                          value: "male",
-                          groupValue: gender,
+                          value: 'male',
+                          groupValue: gender ,
                           onChanged: (value) {
                             setState(() {
                               gender = value;
@@ -147,7 +144,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
                             "Female",
                             style: TextStyle(color: ColorConstant.grey),
                           ),
-                          value: "female",
+                          value: 'female',
                           groupValue: gender,
                           onChanged: (value) {
                             setState(() {
@@ -179,7 +176,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
                       if (_formKey.currentState!.validate()) {
                         String updatedName = nameController.text;
                         String updatedEmail = emailController.text;
-                        String updatedGender = gender??"";
+                        String updatedGender = gender ??" ";
           
                         if (updatedName != widget.userName ||
                             updatedEmail != widget.userEmail ||
