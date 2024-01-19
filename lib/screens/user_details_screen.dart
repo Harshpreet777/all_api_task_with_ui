@@ -4,7 +4,6 @@ import 'package:task/screens/update_screen.dart';
 import 'package:task/services/dio_delete_service.dart';
 import 'package:task/services/dio_get_service.dart';
 import 'package:task/util/color_constant.dart';
-import 'package:task/util/strings.dart';
 
 class UserDetailScreen extends StatefulWidget {
   const UserDetailScreen({super.key});
@@ -64,15 +63,11 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                 const BorderRadius.all(Radius.circular(10))),
                         tileColor: ColorConstant.lightGrey,
                         title: Text(
-                          data.name,
+                          'Name: ${data.name}',
                           style: TextStyle(color: ColorConstant.black),
                         ),
                         subtitle: Text(
                           data.email,
-                          style: TextStyle(color: ColorConstant.black),
-                        ),
-                        leading: Text(
-                          data.gender.toString(),
                           style: TextStyle(color: ColorConstant.black),
                         ),
                         trailing: Row(
@@ -80,39 +75,39 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                           children: [
                             Flexible(
                                 child: InkWell(
-                                    onTap: () {
+                                    onTap: () async{
                                       int deleteId2 = data.id;
-                                      setState(() {
-                                        if (deleteId2 == data.id) {
-                                          DeleteApi.deleteData(id: data.id);
+                                      if (deleteId2 == data.id) {
+                                       await DeleteApi.deleteData(id: data.id);
+                                       if(context.mounted
+                                       ) {showDialog<String>(
+                                            context: context,
+                                            builder: (BuildContext context) =>
+                                                AlertDialog(
+                                                  title: const Text(
+                                                      'User Deleted'),
+                                                  content: Text(
+                                                      'name: ${data.name},id : ${data.id},email : ${data.email} is Deleted'),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () =>
+                                                          Navigator.pop(context,
+                                                              'Cancel'),
+                                                      child:
+                                                          const Text('Cancel'),
+                                                    ),
+                                                    TextButton(
+                                                      onPressed: () =>
+                                                          Navigator.pop(
+                                                              context, 'OK'),
+                                                      child: const Text('OK'),
+                                                    ),
+                                                  ],
+                                                ));}
+                                        setState(() {
                                           futureData = DioApiService.getData();
-                                          showDialog<String>(
-                                              context: context,
-                                              builder: (BuildContext context) =>
-                                                  AlertDialog(
-                                                    title: const Text(
-                                                        'User Deleted'),
-                                                    content: Text(
-                                                        'name: ${data.name},id : ${data.id},email : ${data.email} is Deleted'),
-                                                    actions: [
-                                                      TextButton(
-                                                        onPressed: () =>
-                                                            Navigator.pop(
-                                                                context,
-                                                                'Cancel'),
-                                                        child: const Text(
-                                                            'Cancel'),
-                                                      ),
-                                                      TextButton(
-                                                        onPressed: () =>
-                                                            Navigator.pop(
-                                                                context, 'OK'),
-                                                        child: const Text('OK'),
-                                                      ),
-                                                    ],
-                                                  ));
-                                        }
-                                      });
+                                        });
+                                      }
                                     },
                                     child: Icon(
                                       Icons.delete,
@@ -123,17 +118,22 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                             ),
                             Flexible(
                                 child: InkWell(
-                                    onTap: () {
-                                      IdConstant.getId = data.id;
-                                      Strings.stringEmail = data.email;
-                                      Strings.stringName = data.name;
-
-                                      Navigator.push(
+                                    onTap: () async {
+                                      await Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) =>
-                                                const UpdateScreen(),
-                                          ));
+                                              builder: (context) =>
+                                                  UpdateScreen(
+                                                    userName: data.name,
+                                                    userId: data.id,
+                                                    userEmail: data.email,
+                                                    userGender:
+                                                        data.gender.toString(),
+                                                    userStatus: "active",
+                                                  )));
+                                      setState(() {
+                                        futureData = DioApiService.getData();
+                                      });
                                     },
                                     child: Icon(
                                       Icons.edit,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task/screens/registration_screen.dart';
+import 'package:task/screens/user_details_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -48,11 +49,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const RegistrationScreen(),
+                        builder: (context) => const UserDetailScreen(),
                       ));
                 },
                 child: const Text(
-                  'Login',
+                  'Users Data',
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 )),
           ),

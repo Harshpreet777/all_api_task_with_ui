@@ -44,6 +44,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 22),
                 child: TextFormField(
+                  controller:nameController ,
                   validator: (value) {
                     String namePattern = r'^[a-z A-Z,.\-]+$';
                     RegExp regExp = RegExp(namePattern);
@@ -56,6 +57,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   },
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
+                    
                       hintStyle: TextStyle(color: ColorConstant.grey),
                       filled: true,
                       hintText: 'Name',
@@ -76,6 +78,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 22),
                 child: TextFormField(
+                  controller: emailController,
                   validator: (value) {
                     String emailPattern =
                         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
@@ -83,7 +86,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     if (value.toString().isEmpty) {
                       return "Cannot be Empty";
                     } else if (!regExp.hasMatch(value!)) {
-                      return "@gmail.com is required";
+                      return "@ and . is required";
                     }
                     return null;
                   },
@@ -177,24 +180,33 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                       BorderRadius.all(Radius.circular(8)))),
                           backgroundColor:
                               MaterialStatePropertyAll(Color(0xff1E232C))),
-                      onPressed: () async{
-                        // if (_formKey.currentState!.validate()) {
-                        //   ScaffoldMessenger.of(context).showSnackBar(
-                        //     const SnackBar(content: Text('User Registered')),
-                        //   );
+                      onPressed: () async {
+                        var snackBar;
+                        if (_formKey.currentState!.validate()) {
+                          const snackBar =
+                              SnackBar(content: Text('User Registered!'));
                           RequestModel requestModel = RequestModel(
-                              email: emailController.text,
                               name: nameController.text,
+                              email: emailController.text,
                               gender: gender,
-                              status: 'active');
-                          PostData.postData(requestModel);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const UserDetailScreen(),
-                              ));
-                        },
-                      // },
+                              status: "active");
+                          bool isSuccess =
+                              await PostData.postData(requestModel);
+                          if (isSuccess && context.mounted) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const UserDetailScreen(),
+                                ));
+                          } else {
+                            const snackBar =
+                                SnackBar(content: Text('User Not Registered!'));
+                          }
+
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        }
+                      },
                       child: const Text(
                         'Registration',
                         style: TextStyle(color: Colors.white, fontSize: 16),
