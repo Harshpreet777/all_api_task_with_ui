@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task/models/response_model.dart';
 import 'package:task/screens/update_screen.dart';
-import 'package:task/screens/welcome_screen.dart';
 import 'package:task/services/dio_delete_service.dart';
 import 'package:task/services/dio_get_service.dart';
 import 'package:task/util/color_constant.dart';
@@ -25,9 +24,11 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading:  IconButton(onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const WelcomeScreen(),));
-        }, icon: const Icon(Icons.arrow_back)),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.arrow_back)),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -80,35 +81,37 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                           children: [
                             Flexible(
                                 child: InkWell(
-                                    onTap: () async{
+                                    onTap: () async {
                                       int deleteId2 = data.id;
                                       if (deleteId2 == data.id) {
-                                       await DeleteApi.deleteData(id: data.id);
-                                       if(context.mounted
-                                       ) {showDialog<String>(
-                                            context: context,
-                                            builder: (BuildContext context) =>
-                                                AlertDialog(
-                                                  title: const Text(
-                                                      'User Deleted'),
-                                                  content: Text(
-                                                      'name: ${data.name},id : ${data.id},email : ${data.email} is Deleted'),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () =>
-                                                          Navigator.pop(context,
-                                                              'Cancel'),
-                                                      child:
-                                                          const Text('Cancel'),
-                                                    ),
-                                                    TextButton(
-                                                      onPressed: () =>
-                                                          Navigator.pop(
-                                                              context, 'OK'),
-                                                      child: const Text('OK'),
-                                                    ),
-                                                  ],
-                                                ));}
+                                        await DeleteApi.deleteData(id: data.id);
+                                        if (context.mounted) {
+                                          showDialog<String>(
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  AlertDialog(
+                                                    title: const Text(
+                                                        'User Deleted'),
+                                                    content: Text(
+                                                        'name: ${data.name},id : ${data.id},email : ${data.email} is Deleted'),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                context,
+                                                                'Cancel'),
+                                                        child: const Text(
+                                                            'Cancel'),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                context, 'OK'),
+                                                        child: const Text('OK'),
+                                                      ),
+                                                    ],
+                                                  ));
+                                        }
                                         setState(() {
                                           futureData = DioApiService.getData();
                                         });
@@ -132,8 +135,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                                     userName: data.name,
                                                     userId: data.id,
                                                     userEmail: data.email,
-                                                    userGender:
-                                                        data.gender,
+                                                    userGender: data.gender,
                                                     userStatus: "active",
                                                   )));
                                       setState(() {

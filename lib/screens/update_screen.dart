@@ -24,7 +24,7 @@ class UpdateScreen extends StatefulWidget {
 }
 
 class _UpdateScreenState extends State<UpdateScreen> {
-    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -36,7 +36,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
   @override
   void initState() {
     super.initState();
-    
+
     nameController.text = widget.userName ?? "";
     emailController.text = widget.userEmail ?? "";
     gender = widget.userGender ?? "";
@@ -45,6 +45,13 @@ class _UpdateScreenState extends State<UpdateScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.arrow_back)),
+      ),
       backgroundColor: ColorConstant.lightGrey,
       body: SingleChildScrollView(
         child: Form(
@@ -72,7 +79,8 @@ class _UpdateScreenState extends State<UpdateScreen> {
                       hintText: widget.userName,
                       fillColor: ColorConstant.lightGrey,
                       enabledBorder: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide(
                             color: ColorConstant.borderColorE8ECF4,
                             style: BorderStyle.solid,
@@ -93,7 +101,8 @@ class _UpdateScreenState extends State<UpdateScreen> {
                       hintText: widget.userEmail,
                       fillColor: ColorConstant.lightGrey,
                       enabledBorder: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide(
                           color: ColorConstant.borderColorE8ECF4,
                           style: BorderStyle.solid,
@@ -130,7 +139,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
                             style: TextStyle(color: ColorConstant.grey),
                           ),
                           value: 'male',
-                          groupValue: gender ,
+                          groupValue: gender,
                           onChanged: (value) {
                             setState(() {
                               gender = value;
@@ -167,64 +176,65 @@ class _UpdateScreenState extends State<UpdateScreen> {
                   width: MediaQuery.of(context).size.width,
                   child: ElevatedButton(
                       style: const ButtonStyle(
-                          shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8)))),
+                          shape: MaterialStatePropertyAll(
+                              RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8)))),
                           backgroundColor:
                               MaterialStatePropertyAll(Color(0xff1E232C))),
                       onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        String updatedName = nameController.text;
-                        String updatedEmail = emailController.text;
-                        String updatedGender = gender ??" ";
-          
-                        if (updatedName != widget.userName ||
-                            updatedEmail != widget.userEmail ||
-                            updatedGender != widget.userGender) {
-                          RequestModel requestModel =
-                              RequestModel(
-                            name: updatedName,
-                            email: updatedEmail,
-                            gender: updatedGender,
-                            status: "active",
-                          );
-                          bool isSuccess = await UpdateApi.updateData(
-                            requestModel,
-                            widget.userId,
-                          );
-                          if (isSuccess && context.mounted) {
-                            const snackBar = SnackBar(
-                              content: Text("User Details updated"),
-                              duration: Duration(seconds: 2),
+                        if (_formKey.currentState!.validate()) {
+                          String updatedName = nameController.text;
+                          String updatedEmail = emailController.text;
+                          String updatedGender = gender ?? " ";
+
+                          if (updatedName != widget.userName ||
+                              updatedEmail != widget.userEmail ||
+                              updatedGender != widget.userGender) {
+                            RequestModel requestModel = RequestModel(
+                              name: updatedName,
+                              email: updatedEmail,
+                              gender: updatedGender,
+                              status: "active",
                             );
-                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const UserDetailScreen()));
-                          } else {
-                            log("Email already exists...");
-                            const snackBar = SnackBar(
-                              content: Text(
-                                  "Email already exists..."),
-                              duration: Duration(seconds: 2),
+                            bool isSuccess = await UpdateApi.updateData(
+                              requestModel,
+                              widget.userId,
                             );
-                            if (context.mounted) {
-          
+                            if (isSuccess && context.mounted) {
+                              const snackBar = SnackBar(
+                                content: Text("User Details updated"),
+                                duration: Duration(seconds: 1),
+                              );
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const UserDetailScreen()));
+                            } else {
+                              log("Data already exists...");
+                              const snackBar = SnackBar(
+                                content: Text("Data already exists..."),
+                                duration: Duration(seconds: 2),
+                              );
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              }
                             }
+                          } else {
+                            log(" email already exists...");
+                            const snackBar = SnackBar(
+                              content: Text("Email already exists..."),
+                              duration: Duration(seconds: 2),
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
                           }
-                        } else {
-                          log(" email already exists...");
-                          const snackBar = SnackBar(
-                            content: Text(
-                                "Email already exists..."),
-                            duration: Duration(seconds: 2),
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         }
-                      }},
+                      },
                       child: const Text(
                         'Update Data',
                         style: TextStyle(color: Colors.white, fontSize: 16),
